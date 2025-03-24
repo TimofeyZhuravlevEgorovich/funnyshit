@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{22f230be-c01a-42c6-b7ac-d3eb88b226a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\imgui">
+      <UniqueIdentifier>{0c272bdc-b8d4-4e89-89c5-d2faa1b5d6fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderPrikoli">
+      <UniqueIdentifier>{290ef998-576a-48e7-b077-ed980cda31e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderPrikoli">
+      <UniqueIdentifier>{fae80737-849f-4bf1-a7e5-14a06ea343ca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Common\d3dApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\d3dUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\DDSTextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\GameTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\GeometryGenerator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\MathHelper.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TexColumnsApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\imgui\imgui.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\imgui\imgui_demo.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\imgui\imgui_draw.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\imgui\imgui_impl_dx12.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\imgui\imgui_impl_win32.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\imgui\imgui_tables.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Common\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="GBuffer.cpp">
+      <Filter>Source Files\RenderPrikoli</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderingSystem.cpp">
+      <Filter>Source Files\RenderPrikoli</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Common\d3dApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\d3dUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\d3dx12.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\DDSTextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\GameTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\GeometryGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\MathHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\UploadBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameResource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imconfig.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imgui.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imgui_impl_dx12.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imgui_impl_win32.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imgui_internal.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imstb_rectpack.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imstb_textedit.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Common\imgui\imstb_truetype.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="GBuffer.h">
+      <Filter>Header Files\RenderPrikoli</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderingSystem.h">
+      <Filter>Header Files\RenderPrikoli</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Shaders\Default.hlsl" />
+    <Text Include="Shaders\LightingUtil.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="gbufferVS.hlsl" />
+    <FxCompile Include="gbufferPS.hlsl" />
+    <FxCompile Include="fullscreenVS.hlsl" />
+    <FxCompile Include="finalPS.hlsl" />
+    <FxCompile Include="lightingPS.hlsl" />
+  </ItemGroup>
+</Project>
