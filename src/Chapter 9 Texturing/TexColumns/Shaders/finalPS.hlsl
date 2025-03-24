@@ -6,20 +6,23 @@ struct PixelInput
     float2 texCoord : TEXCOORD;
 };
 
-sampler2D gbufferAlbedo : register(s0);
-sampler2D gbufferNormal : register(s1);
-sampler2D gbufferMaterial : register(s2);
-sampler2D lightingTexture : register(s3);
+// Объявление текстур и семплеров в стиле DX10+
+Texture2D gbufferAlbedo : register(t0);
+Texture2D gbufferNormal : register(t1);
+Texture2D gbufferMaterial : register(t2);
+Texture2D lightingTexture : register(t3);
+
+SamplerState samplerState : register(s0);
 
 float4 main(PixelInput input) : SV_Target
 {
-    // Считывание данных из текстур
-    float4 albedo = tex2D(gbufferAlbedo, input.texCoord);
-    float4 normal = tex2D(gbufferNormal, input.texCoord);
-    float4 material = tex2D(gbufferMaterial, input.texCoord);
+    // Читаем данные из G-буфера
+    float4 albedo = gbufferAlbedo.Sample(samplerState, input.texCoord);
+    float4 normal = gbufferNormal.Sample(samplerState, input.texCoord);
+    float4 material = gbufferMaterial.Sample(samplerState, input.texCoord);
 
-    // Считывание освещенности
-    float4 lighting = tex2D(lightingTexture, input.texCoord);
+    // Читаем освещение
+    float4 lighting = lightingTexture.Sample(samplerState, input.texCoord);
 
     // Композитинг: объединение альбедо, освещения и материала
     return albedo * lighting * material;

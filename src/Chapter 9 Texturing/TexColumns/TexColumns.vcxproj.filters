@@ -155,10 +155,10 @@
     <Text Include="Shaders\LightingUtil.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="gbufferVS.hlsl" />
-    <FxCompile Include="gbufferPS.hlsl" />
-    <FxCompile Include="fullscreenVS.hlsl" />
-    <FxCompile Include="finalPS.hlsl" />
-    <FxCompile Include="lightingPS.hlsl" />
+    <FxCompile Include="Shaders\finalPS.hlsl" />
+    <FxCompile Include="Shaders\fullscreenVS.hlsl" />
+    <FxCompile Include="Shaders\gbufferPS.hlsl" />
+    <FxCompile Include="Shaders\gbufferVS.hlsl" />
+    <FxCompile Include="Shaders\lightingPS.hlsl" />
   </ItemGroup>
 </Project>

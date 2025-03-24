@@ -864,8 +864,12 @@ void TexColumnsApp::BuildShadersAndInputLayout()
 		NULL, NULL
 	};
 
-	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_0");
-	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_0");
+	//mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_0");
+	mShaders["finalPS"] = d3dUtil::CompileShader(L"Shaders\\finalPS.hlsl", nullptr, "PS", "ps_5_0");
+	mShaders["gbufferPS"] = d3dUtil::CompileShader(L"Shaders\\gbufferPS.hlsl", nullptr, "PS", "ps_5_0");
+	mShaders["lightingPS"] = d3dUtil::CompileShader(L"Shaders\\lightingPS.hlsl", nullptr, "PS", "ps_5_0");
+	mShaders["gbufferVS"] = d3dUtil::CompileShader(L"Shaders\\gbufferVS.hlsl", nullptr, "VS", "vs_5_0");
+	mShaders["fullscreenVS"] = d3dUtil::CompileShader(L"Shaders\\fullscreenVS.hlsl", nullptr, "VS", "vs_5_0");
 	
     mInputLayout =
     {

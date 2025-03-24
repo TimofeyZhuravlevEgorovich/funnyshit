@@ -1,42 +1,42 @@
-// lightingPS.hlsl
+// lightningPS.hlsl
 
-#include "LightingUtil.hlsl"
+Texture2D albedoTexture : register(t0);
+Texture2D normalTexture : register(t1);
+Texture2D materialTexture : register(t2);
+SamplerState samplerState : register(s0);
 
-// Структуры данных для G-буфера
-struct GBuffer
+cbuffer CameraBuffer : register(b0)
 {
-    float4 albedo : SV_Target0; // Альбедо
-    float4 normal : SV_Target1; // Нормаль
-    float4 material : SV_Target2; // Материал (например, цвет, характеристики)
-};
+    float3 cameraPosition;
+    float padding;
+}
 
 struct PixelInput
 {
-    float4 position : SV_POSITION; // Позиция пикселя на экране
-    float2 texCoord : TEXCOORD; // Текстурные координаты
+    float4 position : SV_POSITION;
+    float2 texCoord : TEXCOORD;
+    float3 worldPosition : TEXCOORD1;
+    float3 worldNormal : NORMAL;
 };
 
-// Массив источников света
-uniform Light gLights[MaxLights];
-
-// Обработчик пикселя
+// Выходное значение — цвет пикселя
 float4 main(PixelInput input) : SV_Target
 {
-    // Получаем данные из G-буфера
-    GBuffer gBufferData;
-    gBufferData.albedo = tex2D(albedoTexture, input.texCoord);
-    gBufferData.normal = tex2D(normalTexture, input.texCoord);
-    gBufferData.material = tex2D(materialTexture, input.texCoord);
-    
-    // Вектора
-    float3 normal = normalize(gBufferData.normal.xyz);
-    float3 position = input.position.xyz;
-    float3 toEye = normalize(cameraPosition - position); // Камера находится в (cameraPosition)
-    
-    // Применяем освещение
-    float3 shadowFactor = 1.0f; // Можно добавить сюда расчёт для теней, если необходимо
-    float4 lightingColor = ComputeLighting(gLights, gBufferData.material, position, normal, toEye, shadowFactor);
-    
-    // Возвращаем результат освещения
-    return float4(lightingColor.rgb * gBufferData.albedo.rgb, 1.0f);
+    // Семплируем данные из текстур
+    float4 albedo = albedoTexture.Sample(samplerState, input.texCoord);
+    float4 normalData = normalTexture.Sample(samplerState, input.texCoord);
+    float4 material = materialTexture.Sample(samplerState, input.texCoord);
+
+    // Восстанавливаем нормаль
+    float3 normal = normalize(normalData.xyz * 2.0f - 1.0f);
+
+    // Вектор к камере
+    float3 viewDir = normalize(cameraPosition - input.worldPosition);
+
+    // Простая ламбертовская модель освещения (временно)
+    float3 lightDir = normalize(float3(0.0f, 1.0f, -1.0f)); // Направление света
+    float diffuse = max(dot(normal, lightDir), 0.0f);
+
+    // Итоговый цвет
+    return float4(albedo.rgb * diffuse, 1.0f);
 }

@@ -215,21 +215,21 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="finalPS.hlsl">
+    <FxCompile Include="Shaders\finalPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="fullscreenVS.hlsl">
+    <FxCompile Include="Shaders\fullscreenVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="gbufferPS.hlsl">
+    <FxCompile Include="Shaders\gbufferPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="gbufferVS.hlsl">
+    <FxCompile Include="Shaders\gbufferVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="lightingPS.hlsl">
+    <FxCompile Include="Shaders\lightingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <FileType>Document</FileType>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
