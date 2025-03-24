@@ -1,4 +1,4 @@
-// lightningPS.hlsl
+// lightingPS.hlsl
 
 Texture2D albedoTexture : register(t0);
 Texture2D normalTexture : register(t1);
@@ -19,24 +19,16 @@ struct PixelInput
     float3 worldNormal : NORMAL;
 };
 
-// Выходное значение — цвет пикселя
 float4 main(PixelInput input) : SV_Target
 {
-    // Семплируем данные из текстур
     float4 albedo = albedoTexture.Sample(samplerState, input.texCoord);
     float4 normalData = normalTexture.Sample(samplerState, input.texCoord);
     float4 material = materialTexture.Sample(samplerState, input.texCoord);
 
-    // Восстанавливаем нормаль
     float3 normal = normalize(normalData.xyz * 2.0f - 1.0f);
-
-    // Вектор к камере
     float3 viewDir = normalize(cameraPosition - input.worldPosition);
-
-    // Простая ламбертовская модель освещения (временно)
-    float3 lightDir = normalize(float3(0.0f, 1.0f, -1.0f)); // Направление света
+    float3 lightDir = normalize(float3(0.0f, 1.0f, -1.0f));
     float diffuse = max(dot(normal, lightDir), 0.0f);
 
-    // Итоговый цвет
     return float4(albedo.rgb * diffuse, 1.0f);
 }

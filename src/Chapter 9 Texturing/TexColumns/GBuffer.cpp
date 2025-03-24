@@ -126,9 +126,13 @@ void GBuffer::Initialize(ID3D12Device* device, int width, int height)
 
     // Создание RTV и DSV
     device->CreateRenderTargetView(mAlbedoBuffer.Get(), nullptr, mAlbedoRTV);
+    std::cout << "malbedortv created\n";
     device->CreateRenderTargetView(mNormalBuffer.Get(), nullptr, mNormalRTV);
+    std::cout << "mNormalRTV created\n";
     device->CreateRenderTargetView(mMaterialBuffer.Get(), nullptr, mMaterialRTV);
+    std::cout << "mMaterialRTV created\n";
     device->CreateDepthStencilView(mDepthBuffer.Get(), nullptr, mDepthDSV);
+    std::cout << "mDepthDSV created\n";
 }
 
 

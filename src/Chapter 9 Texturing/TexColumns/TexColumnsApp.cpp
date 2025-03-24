@@ -224,6 +224,9 @@ bool TexColumnsApp::Initialize()
 
 	mCamera.SetPosition(camera_defaultposition[0], camera_defaultposition[1], camera_defaultposition[2]);
 	mCamera.RotateY(XMConvertToRadians(180.f));
+
+	mGBuffer = std::make_unique<GBuffer>();
+	mRenderingSystem = std::make_unique<RenderingSystem>();
  
 	LoadAllTextures();
 	std::cout << "Loaded\n";
@@ -237,13 +240,12 @@ bool TexColumnsApp::Initialize()
 	std::cout << "SAIL\n";
 	BuildMaterials();
 	std::cout << "Mat\n";
-    BuildPSOs();
-	std::cout << "PSO\n";
 
-	mGBuffer = std::make_unique<GBuffer>();
-	mRenderingSystem = std::make_unique<RenderingSystem>();
 	BuildGBufferAndRenderingSystem();
 	std::cout << "GBRS\n";
+
+    BuildPSOs();
+	std::cout << "PSO\n";
 
     BuildRenderItems();
 	std::cout << "RI\n";
@@ -277,9 +279,10 @@ bool TexColumnsApp::Initialize()
 
 	ImGui_ImplWin32_Init(mhMainWnd);
 	ImGui_ImplDX12_Init(&init_info);
-	return true;
 
 	std::cout << "initialized!!!" << std::endl;
+
+	return true;
 }
  
 void TexColumnsApp::OnResize()
@@ -370,6 +373,9 @@ void TexColumnsApp::Draw(const GameTimer& gt)
 	std::cout << "before rtvhandles size\n";
 
 	auto rtvHandles = mGBuffer->GetRenderTargetViews();
+
+	std::cout << rtvHandles.size() << std::endl;
+
 	if (rtvHandles.empty())
 	{
 		OutputDebugStringA("Ошибка: rtvHandles пуст, очистка невозможна!\n");
@@ -384,9 +390,7 @@ void TexColumnsApp::Draw(const GameTimer& gt)
 
 	mCommandList->OMSetRenderTargets(static_cast<UINT>(rtvHandles.size()), rtvHandles.data(), FALSE, &mDepthStencilView);
 
-	std::cout << rtvHandles.size() << std::endl;
-
-	for (int i = 0; i < rtvHandles.size(); ++i)
+	for (int i = 0; i < rtvHandles.size(); i++)
 	{
 		if (rtvHandles[i].ptr == 0)
 		{
@@ -864,21 +868,25 @@ void TexColumnsApp::BuildShadersAndInputLayout()
 		NULL, NULL
 	};
 
-	//mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_0");
-	mShaders["finalPS"] = d3dUtil::CompileShader(L"Shaders\\finalPS.hlsl", nullptr, "PS", "ps_5_0");
-	mShaders["gbufferPS"] = d3dUtil::CompileShader(L"Shaders\\gbufferPS.hlsl", nullptr, "PS", "ps_5_0");
-	mShaders["lightingPS"] = d3dUtil::CompileShader(L"Shaders\\lightingPS.hlsl", nullptr, "PS", "ps_5_0");
-	mShaders["gbufferVS"] = d3dUtil::CompileShader(L"Shaders\\gbufferVS.hlsl", nullptr, "VS", "vs_5_0");
-	mShaders["fullscreenVS"] = d3dUtil::CompileShader(L"Shaders\\fullscreenVS.hlsl", nullptr, "VS", "vs_5_0");
-	
-    mInputLayout =
-    {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_0");
+	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_0");
+
+	mShaders["finalPS"] = d3dUtil::CompileShader(L"Shaders\\finalPS.hlsl", nullptr, "main", "ps_5_0");
+	mShaders["gbufferPS"] = d3dUtil::CompileShader(L"Shaders\\gbufferPS.hlsl", nullptr, "main", "ps_5_0");
+	mShaders["lightingPS"] = d3dUtil::CompileShader(L"Shaders\\lightingPS.hlsl", nullptr, "main", "ps_5_0");
+	mShaders["gbufferVS"] = d3dUtil::CompileShader(L"Shaders\\gbufferVS.hlsl", nullptr, "main", "vs_5_0");
+	mShaders["fullscreenVS"] = d3dUtil::CompileShader(L"Shaders\\fullscreenVS.hlsl", nullptr, "main", "vs_5_0");
+
+	mInputLayout =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-        { "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-    };
+		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 44, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+	};
 }
+
 void TexColumnsApp::BuildCustomMeshGeometry(std::string name, UINT& meshVertexOffset, UINT& meshIndexOffset, UINT& prevVertSize, UINT& prevIndSize, std::vector<Vertex>& vertices, std::vector<std::uint16_t>& indices, MeshGeometry* Geo)
 {
 	std::vector<GeometryGenerator::MeshData> meshDatas; // Это твоя структура для хранения вершин и индексов
@@ -1170,9 +1178,7 @@ void TexColumnsApp::BuildPSOs()
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc;
 	ZeroMemory(&psoDesc, sizeof(D3D12_GRAPHICS_PIPELINE_STATE_DESC));
 
-	//
 	// PSO for GBuffer Pass
-	//
 	psoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
 	psoDesc.pRootSignature = mRootSignature.Get();
 	psoDesc.VS = { reinterpret_cast<BYTE*>(mShaders["gbufferVS"]->GetBufferPointer()), mShaders["gbufferVS"]->GetBufferSize() };
@@ -1180,9 +1186,11 @@ void TexColumnsApp::BuildPSOs()
 	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	psoDesc.NumRenderTargets = mGBuffer->GetRenderTargetCount(); // Количество RT из GBuffer
+
+	psoDesc.NumRenderTargets = mGBuffer->GetRenderTargetCount();
 	for (UINT i = 0; i < psoDesc.NumRenderTargets; ++i)
 	{
 		psoDesc.RTVFormats[i] = mGBuffer->GetFormat(i);
@@ -1190,27 +1198,8 @@ void TexColumnsApp::BuildPSOs()
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.DSVFormat = mDepthStencilFormat;
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSOs["gbuffer"])));
-
-
-	//
-	// PSO for Lighting Pass
-	//
-	psoDesc.VS = { reinterpret_cast<BYTE*>(mShaders["fullscreenVS"]->GetBufferPointer()), mShaders["fullscreenVS"]->GetBufferSize() };
-	psoDesc.PS = { reinterpret_cast<BYTE*>(mShaders["lightingPS"]->GetBufferPointer()), mShaders["lightingPS"]->GetBufferSize() };
-	psoDesc.DepthStencilState.DepthEnable = FALSE;  // Отключаем Z-тест, так как рендерим на fullscreen quad
-	psoDesc.DepthStencilState.StencilEnable = FALSE;
-	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = mBackBufferFormat;
-	psoDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSOs["lighting"])));
-
-
-	//
-	// PSO for Final Composition (если нужно пост-обработка)
-	//
-	psoDesc.PS = { reinterpret_cast<BYTE*>(mShaders["finalPS"]->GetBufferPointer()), mShaders["finalPS"]->GetBufferSize() };
-	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSOs["final"])));
 }
+
 
 void TexColumnsApp::BuildFrameResources()
 {

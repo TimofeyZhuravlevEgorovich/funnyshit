@@ -1,6 +1,6 @@
 // gbufferPS.hlsl
 
-Texture2D albedoTexture : register(t0); // Альбедо текстура
+Texture2D albedoTexture : register(t0);
 SamplerState samplerState : register(s0);
 
 struct PixelInput
@@ -12,8 +12,8 @@ struct PixelInput
     float3 bitangent : BITANGENT;
 };
 
-// Входные данные из G-буфера
-struct GBuffer
+// Выходные данные G-буфера
+struct GBufferOutput
 {
     float4 albedo : SV_Target0; // Альбедо
     float4 normal : SV_Target1; // Нормаль
@@ -21,20 +21,15 @@ struct GBuffer
     float depth : SV_Depth; // Глубина
 };
 
-GBuffer main(PixelInput input)
+GBufferOutput main(PixelInput input)
 {
-    GBuffer output;
+    GBufferOutput output;
 
-    // Семплируем текстуру правильно
     output.albedo = albedoTexture.Sample(samplerState, input.texCoord);
-
-    // Нормаль (с нормализацией)
     output.normal = float4(normalize(input.normal), 1.0f);
-
-    // Материал (например, белый, если статично)
     output.material = float4(1.0f, 1.0f, 1.0f, 1.0f);
 
-    // Глубина (нормализуем)
+    // Корректно нормализуем глубину
     output.depth = input.position.z / input.position.w;
 
     return output;
