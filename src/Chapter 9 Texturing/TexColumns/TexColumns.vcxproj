@@ -215,22 +215,28 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\finalPS.hlsl">
+    <Text Include="Shaders\finalPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Shaders\fullscreenVS.hlsl">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Shaders\fullscreenVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Shaders\gbufferPS.hlsl">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Shaders\gbufferPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="Shaders\gbufferVS.hlsl">
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Shaders\gbufferVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-    </FxCompile>
-    <FxCompile Include="Shaders\lightingPS.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <FileType>Document</FileType>
+    </Text>
+    <Text Include="Shaders\lightingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-    </FxCompile>
+      <FileType>Document</FileType>
+    </Text>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

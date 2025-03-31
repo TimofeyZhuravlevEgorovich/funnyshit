@@ -387,7 +387,7 @@ void TexColumnsApp::Draw(const GameTimer& gt)
 		OutputDebugStringA("Ошибка: mDepthStencilView не инициализирован!\n");
 		return;
 	}
-
+	
 	mCommandList->OMSetRenderTargets(static_cast<UINT>(rtvHandles.size()), rtvHandles.data(), FALSE, &mDepthStencilView);
 
 	for (int i = 0; i < rtvHandles.size(); i++)
@@ -857,7 +857,7 @@ void TexColumnsApp::BuildGBufferAndRenderingSystem()
 		mClientHeight
 	);
 
-	mRenderingSystem->Initialize(md3dDevice.Get(), mCommandList.Get());
+	mRenderingSystem->Initialize(md3dDevice.Get(), mCommandList.Get(), mShaders, mInputLayout);
 }
 
 void TexColumnsApp::BuildShadersAndInputLayout()
@@ -868,13 +868,15 @@ void TexColumnsApp::BuildShadersAndInputLayout()
 		NULL, NULL
 	};
 
+
+	mShaders["gbufferPS"] = d3dUtil::CompileShader(L"Shaders\\gbufferPS.hlsl", nullptr, "main", "ps_5_0");
+	mShaders["gbufferVS"] = d3dUtil::CompileShader(L"Shaders\\gbufferVS.hlsl", nullptr, "main", "vs_5_0");
+
 	mShaders["standardVS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "VS", "vs_5_0");
 	mShaders["opaquePS"] = d3dUtil::CompileShader(L"Shaders\\Default.hlsl", nullptr, "PS", "ps_5_0");
 
 	mShaders["finalPS"] = d3dUtil::CompileShader(L"Shaders\\finalPS.hlsl", nullptr, "main", "ps_5_0");
-	mShaders["gbufferPS"] = d3dUtil::CompileShader(L"Shaders\\gbufferPS.hlsl", nullptr, "main", "ps_5_0");
 	mShaders["lightingPS"] = d3dUtil::CompileShader(L"Shaders\\lightingPS.hlsl", nullptr, "main", "ps_5_0");
-	mShaders["gbufferVS"] = d3dUtil::CompileShader(L"Shaders\\gbufferVS.hlsl", nullptr, "main", "vs_5_0");
 	mShaders["fullscreenVS"] = d3dUtil::CompileShader(L"Shaders\\fullscreenVS.hlsl", nullptr, "main", "vs_5_0");
 
 	mInputLayout =
@@ -1181,9 +1183,10 @@ void TexColumnsApp::BuildPSOs()
 	// PSO for GBuffer Pass
 	psoDesc.InputLayout = { mInputLayout.data(), (UINT)mInputLayout.size() };
 	psoDesc.pRootSignature = mRootSignature.Get();
-	psoDesc.VS = { reinterpret_cast<BYTE*>(mShaders["gbufferVS"]->GetBufferPointer()), mShaders["gbufferVS"]->GetBufferSize() };
-	psoDesc.PS = { reinterpret_cast<BYTE*>(mShaders["gbufferPS"]->GetBufferPointer()), mShaders["gbufferPS"]->GetBufferSize() };
-	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	psoDesc.VS = { reinterpret_cast<BYTE*>(mShaders["standardVS"]->GetBufferPointer()), mShaders["standardVS"]->GetBufferSize() };
+	psoDesc.PS = { reinterpret_cast<BYTE*>(mShaders["opaquePS"]->GetBufferPointer()), mShaders["opaquePS"]->GetBufferSize() };
+	psoDesc.RasterizerState.FillMode = D3D12_FILL_MODE_SOLID;
+	psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
@@ -1197,6 +1200,7 @@ void TexColumnsApp::BuildPSOs()
 	}
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.DSVFormat = mDepthStencilFormat;
+
 	ThrowIfFailed(md3dDevice->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&mPSOs["gbuffer"])));
 }
 
